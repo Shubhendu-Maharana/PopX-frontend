@@ -39,7 +39,7 @@ const LoginPage = () => {
 
     setLoading(true);
     const { email, password } = formData;
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -47,9 +47,9 @@ const LoginPage = () => {
     setLoading(false);
 
     if (error) {
-      setError(error);
+      setError({ loginError: error.message });
+      console.log(error);
     } else {
-      localStorage.setItem("user", JSON.stringify(data.user));
       navigate("/dashboard", { replace: true });
     }
   };
@@ -99,6 +99,10 @@ const LoginPage = () => {
             <p className="text-red-500 text-sm mt-1">{error.password}</p>
           )}
         </div>
+
+        {error.loginError && (
+          <p className="text-red-500 text-sm mb-4">{error.loginError}</p>
+        )}
 
         <button
           type="submit"
